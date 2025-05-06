@@ -7,17 +7,17 @@ const reciperoutes = require("./routes/reciperoutes")
 dotenv.config();
 const PORT=process.env.PORT||5000;
 
-const app=express();//running the app with express framework
-app.use(express.json()); //in json format
-app.use(cors());//connecting backend and frontend
+const app=express();
+app.use(express.json()); 
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("Mongodb Connected Successfully"))
 .catch((err)=>console.log("Mongodb Error",err))
 
-app.get("/",(req,res)=>{
-    res.send("DISHQUEST IS RUNNING");
-})
+// app.get("/",(req,res)=>{
+//     res.send("DISHQUEST IS RUNNING");
+// })
 
 app.use('/api/recipe',reciperoutes)
 
