@@ -15,9 +15,7 @@ mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("Mongodb Connected Successfully"))
 .catch((err)=>console.log("Mongodb Error",err))
 
-// app.get("/",(req,res)=>{
-//     res.send("DISHQUEST IS RUNNING");
-// })
+
 
 app.use('/api/recipe',reciperoutes)
 
