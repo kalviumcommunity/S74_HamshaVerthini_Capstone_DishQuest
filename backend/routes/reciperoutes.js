@@ -35,3 +35,26 @@ router.post('/add', async (req, res) => {
 });
 
 module.exports = router;
+
+//PUT to update the recipe
+router.put('/update/:id', async (req, res) => {
+  const { recipe_name, chef_name, cooking_time } = req.body;
+
+  try {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      req.params.id,
+      { recipe_name, chef_name, cooking_time },
+      { new: true }
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.json(updatedRecipe);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+module.exports = router;
