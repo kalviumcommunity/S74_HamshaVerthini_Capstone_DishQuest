@@ -55,5 +55,3 @@ The platform promotes learning, creativity, and community bonding through the lo
 - Record and edit demo video showing app walkthrough.
 
 
-## Backend Deployment Link:
-https://s74-hamshaverthini-capstone-dishquest.onrender.com
