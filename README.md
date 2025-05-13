@@ -53,3 +53,7 @@ The platform promotes learning, creativity, and community bonding through the lo
 - Final database setup on MongoDB Atlas (production cluster).
 - Prepare project documentation (README, tech stack, features).
 - Record and edit demo video showing app walkthrough.
+
+
+## Backend Deployment Link:
+https://s74-hamshaverthini-capstone-dishquest.onrender.com
