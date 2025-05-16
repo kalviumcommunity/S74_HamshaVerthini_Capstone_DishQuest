@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
-
 const Recipe = require('../models/recipe'); 
 
 // GET all recipes
@@ -14,16 +12,26 @@ router.get('/', async (req, res) => {
     }
 });
 
-    
-
 // POST a new recipe
 router.post('/add', async (req, res) => {
-    const { recipe_name, chef_name, cooking_time } = req.body;
+    const {
+        title,
+        description,
+        image,
+        cuisine,
+        ingredients,
+        instructions,
+        createdBy
+    } = req.body;
 
     const newRecipe = new Recipe({
-        recipe_name,
-        chef_name,
-        cooking_time
+        title,
+        description,
+        image,
+        cuisine,
+        ingredients,
+        instructions,
+        createdBy
     });
 
     try {
@@ -34,27 +42,39 @@ router.post('/add', async (req, res) => {
     }
 });
 
-module.exports = router;
-
-//PUT to update the recipe
+// PUT to update a recipe
 router.put('/update/:id', async (req, res) => {
-  const { recipe_name, chef_name, cooking_time } = req.body;
+    const {
+        title,
+        description,
+        image,
+        cuisine,
+        ingredients,
+        instructions
+    } = req.body;
 
-  try {
-    const updatedRecipe = await Recipe.findByIdAndUpdate(
-      req.params.id,
-      { recipe_name, chef_name, cooking_time },
-      { new: true }
-    );
+    try {
+        const updatedRecipe = await Recipe.findByIdAndUpdate(
+            req.params.id,
+            {
+                title,
+                description,
+                image,
+                cuisine,
+                ingredients,
+                instructions
+            },
+            { new: true }
+        );
 
-    if (!updatedRecipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+        if (!updatedRecipe) {
+            return res.status(404).json({ message: 'Recipe not found' });
+        }
+
+        res.json(updatedRecipe);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
-
-    res.json(updatedRecipe);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
 });
 
 module.exports = router;
