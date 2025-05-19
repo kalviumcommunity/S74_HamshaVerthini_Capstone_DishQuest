@@ -57,3 +57,6 @@ The platform promotes learning, creativity, and community bonding through the lo
 
 ## Backend Deployment Link:
 https://s74-hamshaverthini-capstone-dishquest.onrender.com
+
+## Render Link:
+https://dashboard.render.com/web/srv-d0hc9vbe5dus73astqq0/deploys/dep-d0hc9vje5dus73astr7g?r=2025-05-13%4004%3A04%3A19%7E2025-05-13%4004%3A07%3A00
