@@ -1,6 +1,6 @@
 const express = require("express");
 const { addReview, getReviewsForRecipe } = require("../controllers/reviewcontroller");
-const protect = require("../middlewares/authmiddleware");
+const protect = require("../middleware/authmiddleware");
 const router = express.Router();
 
 router.post("/", protect, addReview);
