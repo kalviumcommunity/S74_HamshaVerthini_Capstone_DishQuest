@@ -48,10 +48,26 @@
   font-size: 1rem;
   transition: border-color 0.3s ease;
   outline: none;
+  background: #ffffff; /* ensure strong contrast */
+  color: #2c3e50; /* input text visible */
 }
 
 .form-group input:focus {
   border-color: #ff6b35;
+}
+
+/* Placeholder color for better visibility */
+.form-group input::placeholder {
+  color: #9aa3ab;
+}
+
+/* Fix for Chrome/Edge autofill turning text unreadable */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #2c3e50;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px #ffffff inset;
 }
 
 .form-options {
