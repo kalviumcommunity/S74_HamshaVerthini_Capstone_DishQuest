@@ -16,9 +16,9 @@ The platform promotes learning, creativity, and community bonding through the lo
 
 ---
 
-## 📅 4-Week Development Plan
+## 📅Development Plan
 
-### 🛠️ Week 1: Backend Development, Figma Design & Setup
+### 🛠️1: Backend Development, Figma Design & Setup
 - Set up project architecture (Node.js + Express.js server).
 - Design MongoDB database (collections for users, recipes, comments, badges).
 - Implement user authentication (signup/login/logout) with JWT.
@@ -29,7 +29,7 @@ The platform promotes learning, creativity, and community bonding through the lo
 - Create Figma low-fidelity wireframes (layouts for homepage, recipe page, profile page).
 - Create Figma high-fidelity designs (with color palette, fonts, UI components).
 
-### 🎨 Week 2: Frontend Development & UI Integration
+### 🎨2: Frontend Development & UI Integration
 - Set up React.js frontend with routing & state management (Context API or Redux).
 - Develop UI for homepage, recipe listing, recipe detail, and profile.
 - Implement authentication flow on frontend (signup/login/logout/dashboard).
@@ -37,7 +37,7 @@ The platform promotes learning, creativity, and community bonding through the lo
 - Design and implement Recipe Upload Form with image upload preview.
 - Display user badges on profile.
 
-### 🚀 Week 3: Feature Enhancements & Gamification
+### 🚀3: Feature Enhancements & Gamification
 - Build "Discover" Page with filters (cuisine, popularity, newest).
 - Complete Badge System (unlock badges based on recipe uploads, ratings, comments).
 - Implement rating & comment system on recipe detail page.
@@ -45,7 +45,7 @@ The platform promotes learning, creativity, and community bonding through the lo
 - Optimize database queries and backend performance.
 - Initial full-stack testing.
 
-### 🚢 Week 4: Testing, Debugging & Deployment
+### 🚢 4 : Testing, Debugging & Deployment
 - Conduct thorough full-stack testing (frontend, backend, database).
 - Improve UI/UX based on feedback and testing (fix responsiveness, loading states).
 - Deploy frontend on Vercel or Netlify.
@@ -58,10 +58,7 @@ The platform promotes learning, creativity, and community bonding through the lo
 ## Backend Deployment Link:
 https://s74-hamshaverthini-capstone-dishquest.onrender.com
 
-## Render Link:
-
-https://dashboard.render.com/web/srv-d0hc9vbe5dus73astqq0/deploys/dep-d0hc9vje5dus73astr7g?r=2025-05-13%4004%3A04%3A19%7E2025-05-13%4004%3A07%3A00
 
 ## Frontend Deployment Link:
-https://dazzling-elf-17efb0.netlify.app/
+https://dishquest-capstone.netlify.app/
 
