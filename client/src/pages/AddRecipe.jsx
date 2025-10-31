@@ -19,16 +19,22 @@ const AddRecipe = () => {
     notes: '',
     image: null
   })
+
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [preview, setPreview] = useState(null)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value, files } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: files ? files[0] : value
-    }))
+    if (files && files[0]) {
+      setFormData(prev => ({ ...prev, [name]: files[0] }))
+      setPreview(URL.createObjectURL(files[0]))
+      setUploadSuccess(true)
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -68,7 +74,7 @@ const AddRecipe = () => {
   return (
     <div className="add-recipe">
       <Header />
-      
+
       <div className="add-recipe-content">
         <div className="container">
           <div className="page-header">
@@ -94,7 +100,8 @@ const AddRecipe = () => {
                   />
                 </div>
 
-                <div className="form-group">
+                {/* ✅ Upload with Preview */}
+                <div className="form-group image-upload-group">
                   <label htmlFor="image">Upload Image</label>
                   <div className="file-upload">
                     <input
@@ -105,9 +112,18 @@ const AddRecipe = () => {
                       onChange={handleChange}
                     />
                     <label htmlFor="image" className="file-upload-label">
-                      Choose Image
+                      {preview ? (
+                        <img src={preview} alt="Preview" className="preview-image" />
+                      ) : (
+                        'Choose Image'
+                      )}
                     </label>
                   </div>
+                  {uploadSuccess && (
+                    <p className="upload-success">
+                      ✅ {formData.image?.name} uploaded successfully
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -220,7 +236,7 @@ const AddRecipe = () => {
                   onChange={handleChange}
                   required
                   rows="6"
-                  placeholder="List ingredients, one per line:&#10;2 cups flour&#10;1 cup sugar&#10;3 eggs"
+                  placeholder="List ingredients, one per line..."
                 />
               </div>
 
@@ -233,7 +249,7 @@ const AddRecipe = () => {
                   onChange={handleChange}
                   required
                   rows="8"
-                  placeholder="Write step-by-step instructions:&#10;1. Preheat oven to 350°F&#10;2. Mix dry ingredients&#10;3. Add wet ingredients..."
+                  placeholder="Write step-by-step instructions..."
                 />
               </div>
 
@@ -245,7 +261,7 @@ const AddRecipe = () => {
                   value={formData.notes}
                   onChange={handleChange}
                   rows="4"
-                  placeholder="Any additional tips, variations, or notes..."
+                  placeholder="Any additional tips or notes..."
                 />
               </div>
 
