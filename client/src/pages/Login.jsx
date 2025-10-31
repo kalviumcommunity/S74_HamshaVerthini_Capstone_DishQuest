@@ -9,25 +9,33 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle login submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
-        email: formData.email,
-        password: formData.password,
-      });
+    // Trim inputs before sending
+    const trimmedData = {
+      email: formData.email.trim(),
+      password: formData.password.trim(),
+    };
 
-      // Save token and user info
+    console.log("Sending login data:", trimmedData); // ✅ Debug line
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login", trimmedData);
+
+      // ✅ Save token and user info
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
+      alert("Login successful!");
       navigate("/"); // redirect to homepage
     } catch (err) {
       setError(
@@ -45,6 +53,7 @@ const Login = () => {
         <div className="auth-card">
           <h1>Login</h1>
           {error && <div className="error-message">{error}</div>}
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Email</label>
@@ -76,6 +85,13 @@ const Login = () => {
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
+
+          <p className="switch-text">
+            Don’t have an account?{" "}
+            <span onClick={() => navigate("/signup")} className="link">
+              Sign Up
+            </span>
+          </p>
         </div>
       </div>
     </div>
@@ -83,3 +99,4 @@ const Login = () => {
 };
 
 export default Login;
+
