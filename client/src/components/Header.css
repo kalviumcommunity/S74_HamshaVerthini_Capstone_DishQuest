@@ -28,12 +28,15 @@
 
 .nav {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 2rem;
+  flex: 1;
 }
 
 .nav a {
   text-decoration: none;
-  color: #666;
+  color: black;
   font-weight: 500;
   transition: color 0.3s ease;
 }
@@ -55,13 +58,19 @@
 }
 
 .search-bar input {
+  background-color: #fff;
+  color: #333;
   padding: 0.5rem 1rem 0.5rem 2.5rem;
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 0.9rem;
-  width: 200px;
+  width: 250px;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.search-bar input::placeholder{
+  color: #888;
 }
 
 .search-bar input:focus {
@@ -117,4 +126,27 @@
   .header-actions {
     order: 2;
   }
+}
+
+/* === DishQuest Logo Styling === */
+.logo-text {
+  font-weight: 900;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logo-text .dish {
+  color: #e63946; /* red */
+}
+
+.logo-text .quest {
+  color: #ff9f1c; /* orange */
+}
+
+/* Optional: subtle hover effect */
+.logo-text:hover .dish,
+.logo-text:hover .quest {
+  filter: brightness(1.2);
+  transition: filter 0.3s ease;
 }
