@@ -59,7 +59,6 @@ const Home = () => {
       image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop"
     }
   ]
-
   return (
     <div className="home">
       <Header />
@@ -103,6 +102,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      
 
       {/* Featured Recipes */}
       <section className="featured-recipes">

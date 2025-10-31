@@ -7,6 +7,10 @@ import AddRecipe from './pages/AddRecipe'
 import RecipeSubmission from './pages/RecipeSubmission'
 import RecipeDetail from './pages/RecipeDetail'
 import Profile from './pages/Profile'
+import ProfileSetup from './pages/ProfileSetup'   // ✅ add this line
+import './App.css'
+
+
 import './App.css'
 
 function App() {
@@ -21,6 +25,8 @@ function App() {
         <Route path="/recipe-submitted" element={<RecipeSubmission />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile-setup" element={<ProfileSetup />} />
+
       </Routes>
     </div>
   )
