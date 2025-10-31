@@ -19,7 +19,10 @@ const Header = () => {
         <div className="header-content">
           <div className="logo">
             <Link to="/">
-              <h1>DISHQUEST</h1>
+            <h1 className="logo-text">
+            <span className="dish">DISH</span>
+            <span className="quest">QUEST</span>    
+            </h1>        
             </Link>
           </div>
           <nav className="nav">
