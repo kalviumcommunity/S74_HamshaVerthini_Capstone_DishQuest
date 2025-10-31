@@ -5,6 +5,8 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+
+
 // Import routes
 const authRoutes = require('./routes/authroutes');
 const recipeRoutes = require('./routes/reciperoutes');
@@ -27,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploads)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/recipe-app')
