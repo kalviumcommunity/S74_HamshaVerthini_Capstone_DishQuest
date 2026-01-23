@@ -102,7 +102,7 @@ const AddRecipe = () => {
 
                 {/* ✅ Upload with Preview */}
                 <div className="form-group image-upload-group">
-                  <label htmlFor="image">Upload Image</label>
+                  <label htmlFor="image"></label>
                   <div className="file-upload">
                     <input
                       type="file"
