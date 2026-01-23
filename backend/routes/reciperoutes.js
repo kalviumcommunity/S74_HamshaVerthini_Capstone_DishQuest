@@ -3,7 +3,7 @@ const {
   createRecipe,
   getAllRecipes,
   getRecipeById,
-} = require("../controllers/recipeController"); // ✅ Ensure correct path and spelling
+} = require("../controllers/recipecontroller"); // ✅ Ensure correct path and spelling
 
 const protect = require("../middleware/authmiddleware");
 const upload = require("../middleware/multer");
