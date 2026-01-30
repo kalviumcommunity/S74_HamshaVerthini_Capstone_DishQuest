@@ -2,11 +2,10 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// REGISTER
+
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Basic validation
   if (!username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -21,7 +20,6 @@ const registerUser = async (req, res) => {
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
 
-    // Generate JWT token
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -38,7 +36,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// LOGIN
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
