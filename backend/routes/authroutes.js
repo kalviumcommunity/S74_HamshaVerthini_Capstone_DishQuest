@@ -33,7 +33,6 @@ userrouter.post('/signup', async (req, res) => {
 });
 
 
-//
 userrouter.get('/signup',async(req, res) => {
     const users =await User.find()
     if(!users){
@@ -46,7 +45,6 @@ userrouter.get('/signup',async(req, res) => {
 });
 
 
-// Login
 userrouter.post('/login', async (req, res) => {
   const { email, password } = req.body;
   console.log('[LOGIN] Request body:', req.body);
@@ -71,7 +69,7 @@ userrouter.post('/login', async (req, res) => {
 });
 
 
-//
+
 userrouter.get('/login', async(req, res) => {
     const loginusers= await User.find()
     if(!loginusers){
