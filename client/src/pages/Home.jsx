@@ -1,64 +1,63 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import './Home.css'
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('')
+  const [featuredRecipes, setFeaturedRecipes] = useState([])
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    fetchFeaturedRecipes()
+  }, [])
+
+  const fetchFeaturedRecipes = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/recipes?featured=true')
+      if (response.data && response.data.recipes) {
+        setFeaturedRecipes(response.data.recipes)
+      }
+    } catch (err) {
+      console.error('Error fetching featured recipes:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      navigate(`/browse?search=${encodeURIComponent(searchQuery)}`)
+      navigate(`/browse?search=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
-
-  const featuredRecipes = [
-    {
-      id: 1,
-      title: "Mexican Street Corn Tacos",
-      author: "Sofia Rodriguez",
-      time: "20 min",
-      difficulty: "Easy",
-      rating: 4.9,
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Creamy Tuscan Garlic Chicken",
-      author: "Maria Johnson",
-      time: "30 min",
-      difficulty: "Medium",
-      rating: 4.8,
-      image: "https://images.unsplash.com/photo-1563379091339-03246963d96a?w=400&h=300&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Spicy Thai Basil Noodles",
-      author: "Alex Chan",
-      time: "25 min",
-      difficulty: "Easy",
-      rating: 4.5,
-      image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop"
-    }
-  ]
 
   const categories = [
     {
       name: "Italian",
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop"
+      key: "italian",
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500&h=500&fit=crop"
     },
     {
       name: "Desserts",
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop"
+      key: "dessert",
+      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&h=500&fit=crop"
     },
     {
       name: "Vegetarian",
-      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop"
+      key: "lunch",
+      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=500&fit=crop"
+    },
+    {
+      name: "Mexican",
+      key: "mexican",
+      image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&h=500&fit=crop"
     }
   ]
+
   return (
     <div className="home">
       <Header />
@@ -97,12 +96,12 @@ const Home = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                <button type="submit" className="search-btn">Search</button>
               </form>
             </div>
           </div>
         </div>
       </section>
-      
 
       {/* Featured Recipes */}
       <section className="featured-recipes">
@@ -111,27 +110,49 @@ const Home = () => {
             <h2>Featured Recipes</h2>
             <p>Discover our community's most loved dishes</p>
           </div>
-          <div className="recipe-grid">
-            {featuredRecipes.map(recipe => (
-              <div key={recipe.id} className="recipe-card">
-                <div className="recipe-image">
-                  <img src={recipe.image} alt={recipe.title} />
-                </div>
-                <div className="recipe-content">
-                  <h3>{recipe.title}</h3>
-                  <div className="recipe-meta">
-                    <span className="author">By {recipe.author}</span>
-                    <span className="time">{recipe.time}</span>
-                    <span className="difficulty">{recipe.difficulty}</span>
+
+          {loading ? (
+            <div className="loading-spinner">🍳 Loading featured recipes...</div>
+          ) : (
+            <div className="recipe-grid">
+              {featuredRecipes.map(recipe => (
+                <div 
+                  key={recipe._id} 
+                  className="recipe-card clickable"
+                  onClick={() => navigate(`/recipe/${recipe._id}`)}
+                >
+                  <div className="recipe-image">
+                    <img 
+                      src={recipe.image} 
+                      alt={recipe.title} 
+                      onError={(e) => {
+                        e.target.src = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop"
+                      }}
+                    />
+                    <span className="recipe-category-tag">{recipe.category}</span>
                   </div>
-                  <div className="rating">
-                    <span className="stars">⭐</span>
-                    <span>{recipe.rating}</span>
+                  <div className="recipe-content">
+                    <h3>{recipe.title}</h3>
+                    <p className="recipe-desc">{recipe.description}</p>
+                    <div className="recipe-meta">
+                      <span className="author">By {recipe.authorName || 'Chef'}</span>
+                      <span className="time">⏱️ {recipe.prepTime + recipe.cookTime} min</span>
+                      <span className="difficulty">💪 {recipe.difficulty}</span>
+                    </div>
+                    <div className="rating-row">
+                      <div className="rating">
+                        <span className="stars">⭐</span>
+                        <span>{recipe.rating ? recipe.rating.toFixed(1) : "5.0"}</span>
+                        <span className="reviews-count">({recipe.numReviews || 1})</span>
+                      </div>
+                      <span className="view-link">View Recipe →</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
           <div className="section-footer">
             <button 
               className="btn btn-primary"
@@ -152,10 +173,15 @@ const Home = () => {
           </div>
           <div className="category-grid">
             {categories.map(category => (
-              <div key={category.name} className="category-card">
+              <div 
+                key={category.name} 
+                className="category-card clickable"
+                onClick={() => navigate(`/browse?category=${category.key}`)}
+              >
                 <img src={category.image} alt={category.name} />
                 <div className="category-overlay">
                   <h3>{category.name}</h3>
+                  <span>Explore Recipes →</span>
                 </div>
               </div>
             ))}

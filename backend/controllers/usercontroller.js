@@ -1,32 +1,58 @@
+const User = require("../models/user");
 const Recipe = require("../models/recipe");
 
-const createRecipe = async (req, res) => {
+// Get logged-in user profile with created and saved recipes
+const getProfile = async (req, res) => {
   try {
-    const recipe = new Recipe({ ...req.body, createdBy: req.user });
-    await recipe.save();
-    res.status(201).json(recipe);
+    const user = await User.findById(req.user)
+      .select("-password")
+      .populate("savedRecipes");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const createdRecipes = await Recipe.find({ createdBy: user._id });
+
+    res.status(200).json({
+      user,
+      createdRecipes,
+      savedRecipes: user.savedRecipes || [],
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-const getAllRecipes = async (req, res) => {
+// Update user profile
+const updateProfile = async (req, res) => {
   try {
-    const recipes = await Recipe.find().populate("createdBy", "username");
-    res.status(200).json(recipes);
+    const { fullName, bio, avatar } = req.body;
+    const user = await User.findById(req.user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (fullName !== undefined) user.fullName = fullName;
+    if (bio !== undefined) user.bio = bio;
+    if (avatar !== undefined) user.avatar = avatar;
+
+    await user.save();
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        fullName: user.fullName,
+        bio: user.bio,
+        avatar: user.avatar,
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-const getRecipeById = async (req, res) => {
-  try {
-    const recipe = await Recipe.findById(req.params.id).populate("createdBy", "username");
-    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
-    res.status(200).json(recipe);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-module.exports = { createRecipe, getAllRecipes, getRecipeById };
+module.exports = { getProfile, updateProfile };

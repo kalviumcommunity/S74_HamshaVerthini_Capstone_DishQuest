@@ -12,21 +12,25 @@ const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null)
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isSaved, setIsSaved] = useState(false)
+  const [checkedIngredients, setCheckedIngredients] = useState({})
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
+  const [submittingReview, setSubmittingReview] = useState(false)
 
   useEffect(() => {
     fetchRecipe()
     fetchReviews()
+    checkSavedStatus()
   }, [id])
 
   const fetchRecipe = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/recipes/${id}`)
-      setRecipe(response.data)
+      if (response.data) {
+        setRecipe(response.data)
+      }
     } catch (error) {
       console.error('Error fetching recipe:', error)
-      // Fallback to mock data
-      setRecipe(getMockRecipe())
     } finally {
       setLoading(false)
     }
@@ -35,76 +39,68 @@ const RecipeDetail = () => {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/reviews/${id}`)
-      setReviews(response.data)
+      setReviews(response.data || [])
     } catch (error) {
       console.error('Error fetching reviews:', error)
-      // Fallback to mock data
-      setReviews(getMockReviews())
     }
   }
 
-  const getMockRecipe = () => ({
-    id: id,
-    title: "Creamy Spinach Garlic Chicken",
-    author: "Maria Johnson",
-    image: "https://images.unsplash.com/photo-1563379091339-03246963d96a?w=600&h=400&fit=crop",
-    prepTime: 15,
-    cookTime: 25,
-    servings: 4,
-    ingredients: [
-      "4 boneless chicken breasts",
-      "2 cups fresh spinach",
-      "4 cloves garlic, minced",
-      "1 cup heavy cream",
-      "1/2 cup grated parmesan cheese",
-      "2 tbsp olive oil",
-      "Salt and pepper to taste"
-    ],
-    instructions: [
-      "Season chicken breasts with salt and pepper",
-      "Heat olive oil in a large skillet over medium-high heat",
-      "Cook chicken for 6-7 minutes per side until golden",
-      "Remove chicken and set aside",
-      "Add garlic to the same skillet and cook for 1 minute",
-      "Add spinach and cook until wilted",
-      "Pour in heavy cream and bring to a simmer",
-      "Add parmesan cheese and stir until melted",
-      "Return chicken to skillet and simmer for 5 minutes",
-      "Serve hot with your favorite side dish"
-    ],
-    notes: "This dish pairs perfectly with rice or pasta. You can also add mushrooms for extra flavor."
-  })
-
-  const getMockReviews = () => [
-    {
-      id: 1,
-      user: "Sarah M.",
-      rating: 5,
-      comment: "Absolutely delicious! The chicken was so tender and the sauce was perfect.",
-      date: "2024-01-15"
-    },
-    {
-      id: 2,
-      user: "John D.",
-      rating: 4,
-      comment: "Great recipe! I added some mushrooms and it turned out amazing.",
-      date: "2024-01-10"
+  const checkSavedStatus = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+    try {
+      const response = await axios.get('http://localhost:5000/api/users/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (response.data && response.data.user) {
+        const savedIds = (response.data.user.savedRecipes || []).map(r => typeof r === 'object' ? r._id : r)
+        setIsSaved(savedIds.includes(id))
+      }
+    } catch (err) {
+      console.error('Error checking saved status:', err)
     }
-  ]
+  }
+
+  const handleToggleSave = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      navigate('/login')
+      return
+    }
+
+    try {
+      const response = await axios.post(`http://localhost:5000/api/recipes/${id}/save`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      setIsSaved(response.data.isSaved)
+    } catch (err) {
+      console.error('Error toggling bookmark:', err)
+    }
+  }
+
+  const handleCheckboxToggle = (index) => {
+    setCheckedIngredients(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }))
+  }
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault()
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        navigate('/login')
-        return
-      }
+    const token = localStorage.getItem('token')
+    if (!token) {
+      navigate('/login')
+      return
+    }
 
+    if (!newReview.comment.trim()) return
+
+    setSubmittingReview(true)
+    try {
       await axios.post('http://localhost:5000/api/reviews', {
         recipeId: id,
-        rating: newReview.rating,
-        comment: newReview.comment
+        rating: Number(newReview.rating),
+        comment: newReview.comment.trim()
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -112,9 +108,13 @@ const RecipeDetail = () => {
       })
 
       setNewReview({ rating: 5, comment: '' })
-      fetchReviews() // Refresh reviews
+      fetchReviews()
+      fetchRecipe()
     } catch (error) {
       console.error('Error submitting review:', error)
+      alert('Failed to submit review. Please log in first.')
+    } finally {
+      setSubmittingReview(false)
     }
   }
 
@@ -122,7 +122,7 @@ const RecipeDetail = () => {
     return (
       <div className="recipe-detail">
         <Header />
-        <div className="loading">Loading recipe...</div>
+        <div className="loading-container">🍳 Preparing recipe details...</div>
         <Footer />
       </div>
     )
@@ -132,7 +132,13 @@ const RecipeDetail = () => {
     return (
       <div className="recipe-detail">
         <Header />
-        <div className="error">Recipe not found</div>
+        <div className="error-container">
+          <h2>Recipe Not Found</h2>
+          <p>The recipe you are looking for does not exist or has been removed.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/browse')}>
+            Browse Recipes
+          </button>
+        </div>
         <Footer />
       </div>
     )
@@ -142,65 +148,111 @@ const RecipeDetail = () => {
     <div className="recipe-detail">
       <Header />
       
-      <div className="recipe-content">
+      <div className="recipe-detail-body">
         <div className="container">
-          {/* Recipe Header */}
-          <div className="recipe-header">
-            <div className="recipe-info">
-              <h1>{recipe.title}</h1>
-              <p className="author">By {recipe.author}</p>
+          {/* Recipe Hero Card */}
+          <div className="recipe-hero">
+            <div className="recipe-hero-image">
+              <img 
+                src={recipe.image || "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&h=600&fit=crop"} 
+                alt={recipe.title} 
+                onError={(e) => {
+                  e.target.src = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&h=600&fit=crop"
+                }}
+              />
+              <button 
+                className={`detail-bookmark-btn ${isSaved ? 'saved' : ''}`}
+                onClick={handleToggleSave}
+                title={isSaved ? "Saved in bookmarks" : "Save recipe"}
+              >
+                {isSaved ? '❤️ Saved' : '🤍 Bookmark'}
+              </button>
             </div>
-            <div className="recipe-image">
-              <img src={recipe.image} alt={recipe.title} />
-            </div>
-            <div className="recipe-meta">
-              <div className="meta-item">
-                <span className="meta-label">Prep Time</span>
-                <span className="meta-value">{recipe.prepTime} min</span>
-              </div>
-              <div className="meta-item">
-                <span className="meta-label">Cook Time</span>
-                <span className="meta-value">{recipe.cookTime} min</span>
-              </div>
-              <div className="meta-item">
-                <span className="meta-label">Servings</span>
-                <span className="meta-value">{recipe.servings}</span>
+
+            <div className="recipe-hero-info">
+              <div className="category-badge">{recipe.category} • {recipe.cuisine}</div>
+              <h1 className="detail-title">{recipe.title}</h1>
+              <p className="detail-author">By <span>{recipe.authorName || 'Chef'}</span></p>
+
+              <p className="detail-desc">{recipe.description}</p>
+
+              <div className="detail-stats-grid">
+                <div className="stat-card">
+                  <span className="stat-icon">⏱️</span>
+                  <div className="stat-data">
+                    <span className="stat-label">Prep Time</span>
+                    <span className="stat-val">{recipe.prepTime || 15} min</span>
+                  </div>
+                </div>
+
+                <div className="stat-card">
+                  <span className="stat-icon">🍳</span>
+                  <div className="stat-data">
+                    <span className="stat-label">Cook Time</span>
+                    <span className="stat-val">{recipe.cookTime || 20} min</span>
+                  </div>
+                </div>
+
+                <div className="stat-card">
+                  <span className="stat-icon">👥</span>
+                  <div className="stat-data">
+                    <span className="stat-label">Servings</span>
+                    <span className="stat-val">{recipe.servings || 4}</span>
+                  </div>
+                </div>
+
+                <div className="stat-card">
+                  <span className="stat-icon">⭐</span>
+                  <div className="stat-data">
+                    <span className="stat-label">Rating</span>
+                    <span className="stat-val">{recipe.rating ? recipe.rating.toFixed(1) : "5.0"} ({recipe.numReviews || reviews.length})</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="tabs">
+          {/* Navigation Tabs */}
+          <div className="tabs-bar">
             <button 
-              className={`tab ${activeTab === 'ingredients' ? 'active' : ''}`}
+              className={`tab-btn ${activeTab === 'ingredients' ? 'active' : ''}`}
               onClick={() => setActiveTab('ingredients')}
             >
-              Ingredients
+              🥗 Ingredients
             </button>
             <button 
-              className={`tab ${activeTab === 'instructions' ? 'active' : ''}`}
+              className={`tab-btn ${activeTab === 'instructions' ? 'active' : ''}`}
               onClick={() => setActiveTab('instructions')}
             >
-              Instructions
+              👩‍🍳 Instruction Steps
             </button>
             <button 
-              className={`tab ${activeTab === 'reviews' ? 'active' : ''}`}
+              className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
               onClick={() => setActiveTab('reviews')}
             >
-              Notes & Reviews
+              📝 Notes & Reviews ({reviews.length})
             </button>
           </div>
 
-          {/* Tab Content */}
-          <div className="tab-content">
+          {/* Tab Content Box */}
+          <div className="tab-pane">
             {activeTab === 'ingredients' && (
-              <div className="ingredients-section">
-                <h2>Ingredients</h2>
-                <ul className="ingredients-list">
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index} className="ingredient-item">
-                      <input type="checkbox" id={`ingredient-${index}`} />
-                      <label htmlFor={`ingredient-${index}`}>{ingredient}</label>
+              <div className="ingredients-pane">
+                <h2>Ingredients Required</h2>
+                <p className="tab-hint">Check off ingredients as you prepare your dish:</p>
+                <ul className="ingredients-checklist">
+                  {recipe.ingredients && recipe.ingredients.map((ingredient, idx) => (
+                    <li 
+                      key={idx} 
+                      className={`checklist-item ${checkedIngredients[idx] ? 'checked' : ''}`}
+                      onClick={() => handleCheckboxToggle(idx)}
+                    >
+                      <input 
+                        type="checkbox" 
+                        checked={!!checkedIngredients[idx]} 
+                        onChange={() => {}}
+                      />
+                      <span>{ingredient}</span>
                     </li>
                   ))}
                 </ul>
@@ -208,12 +260,13 @@ const RecipeDetail = () => {
             )}
 
             {activeTab === 'instructions' && (
-              <div className="instructions-section">
-                <h2>Instructions</h2>
-                <ol className="instructions-list">
-                  {recipe.instructions.map((instruction, index) => (
-                    <li key={index} className="instruction-item">
-                      {instruction}
+              <div className="instructions-pane">
+                <h2>Step-by-Step Cooking Instructions</h2>
+                <ol className="instructions-steps">
+                  {recipe.instructions && recipe.instructions.map((step, idx) => (
+                    <li key={idx} className="step-card">
+                      <div className="step-number">{idx + 1}</div>
+                      <div className="step-text">{step}</div>
                     </li>
                   ))}
                 </ol>
@@ -221,61 +274,79 @@ const RecipeDetail = () => {
             )}
 
             {activeTab === 'reviews' && (
-              <div className="reviews-section">
-                <h2>Notes & Reviews</h2>
-                
+              <div className="reviews-pane">
                 {recipe.notes && (
-                  <div className="notes-section">
-                    <h3>Recipe Notes</h3>
+                  <div className="chef-notes-box">
+                    <h3>💡 Chef's Special Notes</h3>
                     <p>{recipe.notes}</p>
                   </div>
                 )}
 
-                <div className="reviews-list">
-                  <h3>Reviews</h3>
-                  {reviews.map(review => (
-                    <div key={review.id} className="review-item">
-                      <div className="review-header">
-                        <span className="reviewer-name">{review.user}</span>
-                        <div className="review-rating">
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>⭐</span>
-                          ))}
+                <div className="reviews-list-section">
+                  <h2>Community Reviews</h2>
+                  {reviews.length === 0 ? (
+                    <p className="no-reviews">No reviews yet. Be the first to share your thoughts!</p>
+                  ) : (
+                    <div className="reviews-cards-list">
+                      {reviews.map(rev => (
+                        <div key={rev._id || rev.id} className="review-card">
+                          <div className="review-card-header">
+                            <div className="reviewer-info">
+                              <span className="reviewer-avatar">👤</span>
+                              <div>
+                                <h4 className="reviewer-name">{rev.userName || 'Food Lover'}</h4>
+                                <span className="review-date">
+                                  {rev.createdAt ? new Date(rev.createdAt).toLocaleDateString() : 'Recent'}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="review-stars">
+                              {'⭐'.repeat(rev.rating)}
+                            </div>
+                          </div>
+                          <p className="review-text">{rev.comment}</p>
                         </div>
-                        <span className="review-date">{review.date}</span>
-                      </div>
-                      <p className="review-comment">{review.comment}</p>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
 
-                <div className="add-review">
+                <div className="add-review-box">
                   <h3>Leave a Review</h3>
-                  <form onSubmit={handleReviewSubmit}>
+                  <form onSubmit={handleReviewSubmit} className="review-form">
                     <div className="form-group">
-                      <label>Rating</label>
+                      <label>Your Rating</label>
                       <select 
-                        value={newReview.rating} 
-                        onChange={(e) => setNewReview({...newReview, rating: parseInt(e.target.value)})}
+                        value={newReview.rating}
+                        onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
+                        className="rating-select"
                       >
-                        <option value={5}>5 Stars</option>
-                        <option value={4}>4 Stars</option>
-                        <option value={3}>3 Stars</option>
-                        <option value={2}>2 Stars</option>
-                        <option value={1}>1 Star</option>
+                        <option value={5}>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                        <option value={4}>⭐⭐⭐⭐ (4 - Very Good)</option>
+                        <option value={3}>⭐⭐⭐ (3 - Good)</option>
+                        <option value={2}>⭐⭐ (2 - Fair)</option>
+                        <option value={1}>⭐ (1 - Needs Improvement)</option>
                       </select>
                     </div>
+
                     <div className="form-group">
-                      <label>Comment</label>
+                      <label>Your Feedback / Experience</label>
                       <textarea
-                        value={newReview.comment}
-                        onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
                         rows="4"
-                        placeholder="Share your thoughts about this recipe..."
+                        placeholder="Write your review here..."
+                        value={newReview.comment}
+                        onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                         required
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary">Submit Review</button>
+
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary" 
+                      disabled={submittingReview}
+                    >
+                      {submittingReview ? 'Submitting...' : 'Submit Review'}
+                    </button>
                   </form>
                 </div>
               </div>
