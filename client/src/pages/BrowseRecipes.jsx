@@ -3,13 +3,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { API_BASE_URL, DEFAULT_RECIPE_IMAGE, getRecipeImageUrl } from '../config/api'
 import './BrowseRecipes.css'
-
-const API_BASE_URL =
-  'https://s74-hamshaverthini-capstone-dishquest-10.onrender.com'
-
-const DEFAULT_IMAGE =
-  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop'
 
 const BrowseRecipes = () => {
   const [recipes, setRecipes] = useState([])
@@ -229,17 +224,7 @@ const BrowseRecipes = () => {
   }
 
   const getRecipeImage = (image) => {
-    // If image doesn't exist
-    if (!image) {
-      return DEFAULT_IMAGE
-    }
-
-    // Fix old localhost image URLs after deployment
-    if (image.includes('localhost:5000')) {
-      return DEFAULT_IMAGE
-    }
-
-    return image
+    return getRecipeImageUrl(image)
   }
 
   const getDifficultyClass = (difficulty) => {

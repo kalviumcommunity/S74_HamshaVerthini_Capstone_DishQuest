@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 import "./Auth.css";
 
 const Login = () => {
@@ -29,7 +30,7 @@ const Login = () => {
     console.log("Sending login data:", trimmedData); // ✅ Debug line
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", trimmedData);
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, trimmedData);
 
       // ✅ Save token and user info
       localStorage.setItem("token", response.data.token);

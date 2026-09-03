@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { API_BASE_URL } from '../config/api'
 import './AddRecipe.css'
 
 const AddRecipe = () => {
@@ -122,7 +123,7 @@ const AddRecipe = () => {
       cleanIngredients.forEach(ing => submitData.append('ingredients', ing))
       cleanInstructions.forEach(inst => submitData.append('instructions', inst))
 
-      await axios.post('http://localhost:5000/api/recipes', submitData, {
+      await axios.post(`${API_BASE_URL}/api/recipes`, submitData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'

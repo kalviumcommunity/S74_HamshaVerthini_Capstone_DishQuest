@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../config/api";
 import "./Auth.css";
 
 const Signup = () => {
@@ -31,7 +32,7 @@ const Signup = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/signup",
+        `${API_BASE_URL}/api/auth/signup`,
         trimmedData
       );
 

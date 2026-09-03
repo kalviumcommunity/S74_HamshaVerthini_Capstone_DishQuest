@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { API_BASE_URL, DEFAULT_RECIPE_IMAGE, getRecipeImageUrl } from '../config/api'
 import './Profile.css'
 
 const Profile = () => {
@@ -31,7 +32,7 @@ const Profile = () => {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:5000/api/users/profile', {
+      const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -56,7 +57,7 @@ const Profile = () => {
     setUpdating(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.put('http://localhost:5000/api/users/profile', editForm, {
+      const response = await axios.put(`${API_BASE_URL}/api/users/profile`, editForm, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -77,7 +78,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token')
-      await axios.delete(`http://localhost:5000/api/recipes/${recipeId}`, {
+      await axios.delete(`${API_BASE_URL}/api/recipes/${recipeId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setCreatedRecipes(prev => prev.filter(r => r._id !== recipeId))
@@ -203,7 +204,14 @@ const Profile = () => {
                   {createdRecipes.map(recipe => (
                     <div key={recipe._id} className="recipe-card">
                       <div className="recipe-image" onClick={() => navigate(`/recipe/${recipe._id}`)}>
-                        <img src={recipe.image} alt={recipe.title} />
+                        <img 
+                          src={getRecipeImageUrl(recipe.image)} 
+                          alt={recipe.title} 
+                          onError={(e) => {
+                            e.currentTarget.onerror = null
+                            e.currentTarget.src = DEFAULT_RECIPE_IMAGE
+                          }}
+                        />
                         <span className="recipe-category-tag">{recipe.category}</span>
                       </div>
                       <div className="recipe-content">
@@ -251,7 +259,14 @@ const Profile = () => {
                       onClick={() => navigate(`/recipe/${recipe._id}`)}
                     >
                       <div className="recipe-image">
-                        <img src={recipe.image} alt={recipe.title} />
+                        <img 
+                          src={getRecipeImageUrl(recipe.image)} 
+                          alt={recipe.title} 
+                          onError={(e) => {
+                            e.currentTarget.onerror = null
+                            e.currentTarget.src = DEFAULT_RECIPE_IMAGE
+                          }}
+                        />
                         <span className="recipe-category-tag">{recipe.category}</span>
                       </div>
                       <div className="recipe-content">

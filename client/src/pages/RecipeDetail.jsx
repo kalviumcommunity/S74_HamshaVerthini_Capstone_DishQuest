@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { API_BASE_URL, DEFAULT_RECIPE_IMAGE, getRecipeImageUrl } from '../config/api'
 import './RecipeDetail.css'
 
 const RecipeDetail = () => {
@@ -25,7 +26,7 @@ const RecipeDetail = () => {
 
   const fetchRecipe = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/recipes/${id}`)
+      const response = await axios.get(`${API_BASE_URL}/api/recipes/${id}`)
       if (response.data) {
         setRecipe(response.data)
       }
@@ -38,7 +39,7 @@ const RecipeDetail = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/reviews/${id}`)
+      const response = await axios.get(`${API_BASE_URL}/api/reviews/${id}`)
       setReviews(response.data || [])
     } catch (error) {
       console.error('Error fetching reviews:', error)
@@ -49,7 +50,7 @@ const RecipeDetail = () => {
     const token = localStorage.getItem('token')
     if (!token) return
     try {
-      const response = await axios.get('http://localhost:5000/api/users/profile', {
+      const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (response.data && response.data.user) {
@@ -69,7 +70,7 @@ const RecipeDetail = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/recipes/${id}/save`, {}, {
+      const response = await axios.post(`${API_BASE_URL}/api/recipes/${id}/save`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setIsSaved(response.data.isSaved)
@@ -97,7 +98,7 @@ const RecipeDetail = () => {
 
     setSubmittingReview(true)
     try {
-      await axios.post('http://localhost:5000/api/reviews', {
+      await axios.post(`${API_BASE_URL}/api/reviews`, {
         recipeId: id,
         rating: Number(newReview.rating),
         comment: newReview.comment.trim()
@@ -154,10 +155,11 @@ const RecipeDetail = () => {
           <div className="recipe-hero">
             <div className="recipe-hero-image">
               <img 
-                src={recipe.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"} 
+                src={getRecipeImageUrl(recipe.image)} 
                 alt={recipe.title} 
                 onError={(e) => {
-                  e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"
+                  e.currentTarget.onerror = null
+                  e.currentTarget.src = DEFAULT_RECIPE_IMAGE
                 }}
               />
               <button 

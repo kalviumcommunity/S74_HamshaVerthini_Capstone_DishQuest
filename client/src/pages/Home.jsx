@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { API_BASE_URL, DEFAULT_RECIPE_IMAGE, getRecipeImageUrl } from '../config/api'
 import './Home.css'
 
 const Home = () => {
@@ -16,7 +17,7 @@ const Home = () => {
 
   const fetchFeaturedRecipes = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/recipes?featured=true')
+      const response = await axios.get(`${API_BASE_URL}/api/recipes?featured=true`)
       if (response.data && response.data.recipes) {
         setFeaturedRecipes(response.data.recipes)
       }
@@ -104,10 +105,11 @@ const Home = () => {
                 >
                   <div className="recipe-image">
                     <img 
-                      src={recipe.image} 
+                      src={getRecipeImageUrl(recipe.image)} 
                       alt={recipe.title} 
                       onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop"
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = DEFAULT_RECIPE_IMAGE
                       }}
                     />
                     <span className="recipe-category-tag">{recipe.category}</span>
