@@ -6,7 +6,6 @@ import Footer from '../components/Footer'
 import './Home.css'
 
 const Home = () => {
-  const [searchQuery, setSearchQuery] = useState('')
   const [featuredRecipes, setFeaturedRecipes] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -28,18 +27,11 @@ const Home = () => {
     }
   }
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      navigate(`/browse?search=${encodeURIComponent(searchQuery.trim())}`)
-    }
-  }
-
   const categories = [
     {
       name: "Italian",
       key: "italian",
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500&h=500&fit=crop"
+      image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&h=500&fit=crop"
     },
     {
       name: "Desserts",
@@ -67,7 +59,8 @@ const Home = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Discover & Share <span className="highlight">Delicious</span> Recipes
+              Discover & Share <br />
+              <span className="highlight">Delicious</span> Recipes
             </h1>
             <p className="hero-description">
               Join our culinary community to find inspiration, share your favorite dishes, 
@@ -86,18 +79,6 @@ const Home = () => {
               >
                 Add Your Recipe
               </button>
-            </div>
-            <div className="hero-search">
-              <form className="search-bar large" onSubmit={handleSearch}>
-                <span className="search-icon">🔍</span>
-                <input 
-                  type="text" 
-                  placeholder="Search for recipes, ingredients, cuisine..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button type="submit" className="search-btn">Search</button>
-              </form>
             </div>
           </div>
         </div>
@@ -126,7 +107,7 @@ const Home = () => {
                       src={recipe.image} 
                       alt={recipe.title} 
                       onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop"
+                        e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop"
                       }}
                     />
                     <span className="recipe-category-tag">{recipe.category}</span>

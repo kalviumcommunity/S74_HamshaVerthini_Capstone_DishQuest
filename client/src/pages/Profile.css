@@ -30,13 +30,19 @@
   align-items: flex-start;
 }
 
-.profile-avatar img {
+.profile-avatar img,
+.profile-avatar-icon {
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #ff6b4a;
-  box-shadow: 0 4px 14px rgba(255, 107, 74, 0.2);
+  background-color: #fff0eb;
+  color: #ff6b35;
+  border: 4px solid #ff6b35;
+  box-shadow: 0 4px 14px rgba(255, 107, 53, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
 }
 
 .profile-details h1 {

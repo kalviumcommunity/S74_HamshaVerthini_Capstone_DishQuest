@@ -84,7 +84,7 @@ const getAllRecipes = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (featured === "true") {
-      recipes = recipes.slice(0, 3);
+      recipes = recipes.slice(0, 4);
     }
 
     res.status(200).json({ recipes, count: recipes.length });

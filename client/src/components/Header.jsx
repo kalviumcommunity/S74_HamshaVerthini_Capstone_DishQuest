@@ -67,16 +67,11 @@ const Header = () => {
           {user ? (
             <div className="user-profile-menu">
               <Link to="/profile" className="profile-btn" title="View Profile">
-                <img 
-                  src={user.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"} 
-                  alt="Profile" 
-                  className="header-avatar"
-                />
+                <div className="header-avatar-icon">
+                  👤
+                </div>
                 <span className="user-name">{user.username}</span>
               </Link>
-              <button onClick={handleLogout} className="btn btn-outline btn-sm logout-btn">
-                Logout
-              </button>
             </div>
           ) : (
             <div className="auth-buttons">

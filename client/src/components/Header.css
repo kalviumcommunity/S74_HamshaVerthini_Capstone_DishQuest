@@ -27,26 +27,27 @@
 }
 
 .logo-text .dish {
-  color: #ff6b4a;
+  color: #e53935;
 }
 
 .logo-text .quest {
-  color: #2c2c2c;
+  color: #ff6b35;
 }
 
 .nav {
   display: flex;
-  gap: 28px;
+  align-items: center;
+  gap: 36px;
 }
 
 .nav a {
   text-decoration: none;
   color: #555555;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 18px;
   transition: color 0.2s ease;
   position: relative;
-  padding: 4px 0;
+  padding: 6px 0;
 }
 
 .nav a:hover,
@@ -128,17 +129,17 @@
   color: #ff6b4a;
 }
 
-.header-avatar {
+.header-avatar, .header-avatar-icon {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ff6b4a;
-}
-
-.logout-btn {
-  font-size: 12px !important;
-  padding: 6px 12px !important;
+  background-color: #fff0eb;
+  color: #ff6b35;
+  border: 2px solid #ff6b35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 .auth-buttons {

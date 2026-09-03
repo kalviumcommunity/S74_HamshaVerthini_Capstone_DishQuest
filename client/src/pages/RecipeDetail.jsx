@@ -154,10 +154,10 @@ const RecipeDetail = () => {
           <div className="recipe-hero">
             <div className="recipe-hero-image">
               <img 
-                src={recipe.image || "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&h=600&fit=crop"} 
+                src={recipe.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"} 
                 alt={recipe.title} 
                 onError={(e) => {
-                  e.target.src = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&h=600&fit=crop"
+                  e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"
                 }}
               />
               <button 

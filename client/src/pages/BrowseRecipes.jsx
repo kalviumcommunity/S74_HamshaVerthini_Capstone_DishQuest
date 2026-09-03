@@ -126,14 +126,14 @@ const BrowseRecipes = () => {
             {/* Filters Sidebar */}
             <div className="filters-sidebar">
               <div className="filter-sidebar-header">
-                <h3>Filter Recipes</h3>
+                <h3><span className="filter-icon">🎛️</span> Filter Recipes</h3>
                 {(filters.category || filters.cuisine || filters.difficulty || filters.search) && (
-                  <button className="clear-btn" onClick={clearFilters}>Reset All</button>
+                  <button className="clear-btn" onClick={clearFilters}>↺ Reset All</button>
                 )}
               </div>
 
               <div className="filter-group">
-                <label>Search Keywords</label>
+                <label><span className="label-icon">🔍</span> Search Keywords</label>
                 <input 
                   type="text" 
                   placeholder="Title or ingredient..."
@@ -144,7 +144,7 @@ const BrowseRecipes = () => {
               </div>
 
               <div className="filter-group">
-                <label>Category</label>
+                <label><span className="label-icon">🏷️</span> Category</label>
                 <select value={filters.category} onChange={(e) => handleFilterChange('category', e.target.value)}>
                   <option value="">All Categories</option>
                   <option value="breakfast">Breakfast</option>
@@ -156,7 +156,7 @@ const BrowseRecipes = () => {
               </div>
 
               <div className="filter-group">
-                <label>Cuisine</label>
+                <label><span className="label-icon">🌐</span> Cuisine</label>
                 <select value={filters.cuisine} onChange={(e) => handleFilterChange('cuisine', e.target.value)}>
                   <option value="">All Cuisines</option>
                   <option value="italian">Italian</option>
@@ -169,7 +169,7 @@ const BrowseRecipes = () => {
               </div>
 
               <div className="filter-group">
-                <label>Difficulty</label>
+                <label><span className="label-icon">⚡</span> Difficulty</label>
                 <select value={filters.difficulty} onChange={(e) => handleFilterChange('difficulty', e.target.value)}>
                   <option value="">All Levels</option>
                   <option value="easy">Easy</option>
@@ -202,10 +202,10 @@ const BrowseRecipes = () => {
                       >
                         <div className="recipe-image">
                           <img
-                            src={recipe.image || "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop"}
+                            src={recipe.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop"}
                             alt={recipe.title}
                             onError={(e) => {
-                              e.target.src = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop"
+                              e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop"
                             }}
                             loading="lazy"
                           />

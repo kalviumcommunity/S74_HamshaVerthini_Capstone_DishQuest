@@ -16,6 +16,21 @@
   color: #ff6b35;
 }
 
+.footer-section h3.footer-logo {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+.footer-section h3.footer-logo .dish {
+  color: #e53935;
+}
+
+.footer-section h3.footer-logo .quest {
+  color: #ff6b35;
+}
+
 .footer-section p {
   color: #bdc3c7;
   line-height: 1.6;

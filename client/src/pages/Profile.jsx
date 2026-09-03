@@ -113,10 +113,9 @@ const Profile = () => {
           <div className="profile-header-card">
             <div className="profile-info-left">
               <div className="profile-avatar">
-                <img 
-                  src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"} 
-                  alt="Profile Avatar" 
-                />
+                <div className="profile-avatar-icon">
+                  👤
+                </div>
               </div>
               <div className="profile-details">
                 <h1>{user?.fullName || user?.username || 'Culinary Lover'}</h1>

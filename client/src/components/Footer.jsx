@@ -7,7 +7,10 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>DISHQUEST</h3>
+            <h3 className="footer-logo">
+              <span className="dish">DISH</span>
+              <span className="quest">QUEST</span>
+            </h3>
             <p>Discover, share, and celebrate the joy of cooking with our global culinary community.</p>
           </div>
           <div className="footer-section">
