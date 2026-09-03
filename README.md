@@ -5,10 +5,11 @@
 DISHQUEST is a vibrant recipe-sharing platform that connects food lovers worldwide. Users can upload their own recipes with images, rate and comment on others' dishes, and earn badges for their contributions.
 
 Key features include:
-- **Recipe Marketplace**: Share and discover recipes.
-- **Community Interaction**: Engage through ratings, comments, and suggestions.
-- **Badge System**: Earn recognition for top contributions.
-- **Discover Section**: Explore dishes by cuisine, popularity, or latest uploads.
+
+* **Recipe Marketplace**: Share and discover recipes.
+* **Community Interaction**: Engage through ratings, comments, and suggestions.
+* **Badge System**: Earn recognition for top contributions.
+* **Discover Section**: Explore dishes by cuisine, popularity, or latest uploads.
 
 The platform promotes learning, creativity, and community bonding through the love of food.
 
@@ -16,49 +17,42 @@ The platform promotes learning, creativity, and community bonding through the lo
 
 ---
 
-## 📅Development Plan
+## 🚀 How to Run the Project
 
-### 🛠️1: Backend Development, Figma Design & Setup
-- Set up project architecture (Node.js + Express.js server).
-- Design MongoDB database (collections for users, recipes, comments, badges).
-- Implement user authentication (signup/login/logout) with JWT.
-- Create CRUD operations for recipes and comments.
-- Set up image upload using Cloudinary (for recipe images).
-- Develop badge logic backend (basic structure).
-- Test all API endpoints with Postman.
-- Create Figma low-fidelity wireframes (layouts for homepage, recipe page, profile page).
-- Create Figma high-fidelity designs (with color palette, fonts, UI components).
+### 1. Clone the Repository
 
-### 🎨2: Frontend Development & UI Integration
-- Set up React.js frontend with routing & state management (Context API or Redux).
-- Develop UI for homepage, recipe listing, recipe detail, and profile.
-- Implement authentication flow on frontend (signup/login/logout/dashboard).
-- Integrate frontend with backend APIs (Axios/fetch).
-- Design and implement Recipe Upload Form with image upload preview.
-- Display user badges on profile.
+```bash
+git clone https://github.com/kalviumcommunity/S74_HamshaVerthini_Capstone_DishQuest.git
+```
 
-### 🚀3: Feature Enhancements & Gamification
-- Build "Discover" Page with filters (cuisine, popularity, newest).
-- Complete Badge System (unlock badges based on recipe uploads, ratings, comments).
-- Implement rating & comment system on recipe detail page.
-- Display Leaderboard (Top contributors based on badges or likes).
-- Optimize database queries and backend performance.
-- Initial full-stack testing.
+### 2. Navigate to the Project Folder
 
-### 🚢 4 : Testing, Debugging & Deployment
-- Conduct thorough full-stack testing (frontend, backend, database).
-- Improve UI/UX based on feedback and testing (fix responsiveness, loading states).
-- Deploy frontend on Vercel or Netlify.
-- Deploy backend API on Render or Railway.
-- Final database setup on MongoDB Atlas (production cluster).
-- Prepare project documentation (README, tech stack, features).
-- Record and edit demo video showing app walkthrough.
+```bash
+cd .\S74_HamshaVerthini_Capstone_DishQuest\
+```
 
+### 3. Run the Backend
 
-## Backend Deployment Link:
+```bash
+cd backend
+node server.js
+```
+
+### 4. Run the Frontend
+
+Open a new terminal and navigate to the project folder:
+
+```bash
+cd client
+npm run dev
+```
+
+---
+
+## 🌐 Deployment Links
+
+**Backend Deployment Link:**
 https://s74-hamshaverthini-capstone-dishquest-10.onrender.com
 
-
-## Frontend Deployment Link:
+**Frontend Deployment Link:**
 https://dishquest-capstone.netlify.app/
-
