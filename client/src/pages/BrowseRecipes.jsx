@@ -527,9 +527,10 @@ const BrowseRecipes = () => {
                               aria-label={isSaved ? 'Remove bookmark' : 'Save recipe'}
                             >
                               <Heart
-                                size={18}
+                                size={24}
                                 className={isSaved ? 'heart-icon saved' : 'heart-icon'}
-                                fill={isSaved ? '#e53e3e' : 'none'}
+                                fill={isSaved ? '#e53e3e' : '#ffffff'}
+                                color={isSaved ? '#e53e3e' : '#ffffff'}
                               />
                             </button>
 
