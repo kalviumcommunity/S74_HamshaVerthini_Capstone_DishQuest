@@ -5,16 +5,16 @@
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
   width: 100%;
 }
 
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, #fff5f0 0%, #ffeae0 100%);
-  padding: 80px 0 90px;
+  padding: 42px 0 48px;
   text-align: center;
   border-bottom: 1px solid #f0e2da;
 }
@@ -25,11 +25,11 @@
 }
 
 .hero-title {
-  font-size: 48px;
+  font-size: 46px;
   font-weight: 800;
   color: #2c2c2c;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  margin-bottom: 12px;
+  line-height: 1.25;
 }
 
 .hero-title .highlight {
@@ -37,17 +37,17 @@
 }
 
 .hero-description {
-  font-size: 18px;
+  font-size: 17px;
   color: #666666;
-  margin-bottom: 36px;
-  line-height: 1.6;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
 .hero-buttons {
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 0;
 }
 
 .btn {
@@ -132,7 +132,7 @@
 
 /* Sections */
 .featured-recipes, .categories {
-  padding: 80px 0;
+  padding: 40px 0;
 }
 
 .featured-recipes {
@@ -145,18 +145,18 @@
 
 .section-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .section-header h2 {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 700;
   color: #2c2c2c;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 
 .section-header p {
-  font-size: 16px;
+  font-size: 15px;
   color: #777777;
 }
 
@@ -282,7 +282,7 @@
 
 .section-footer {
   text-align: center;
-  margin-top: 48px;
+  margin-top: 24px;
 }
 
 /* Categories Grid */
@@ -342,7 +342,7 @@
 .cta-section {
   background: linear-gradient(135deg, #ff6b4a 0%, #f05a36 100%);
   color: #ffffff;
-  padding: 70px 0;
+  padding: 36px 0;
   text-align: center;
 }
 
@@ -352,16 +352,16 @@
 }
 
 .cta-content h2 {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .cta-content p {
-  font-size: 17px;
-  margin-bottom: 32px;
+  font-size: 16px;
+  margin-bottom: 20px;
   opacity: 0.9;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .cta-content .btn-primary {
