@@ -109,7 +109,7 @@ const sampleRecipes = [
   {
     title: "Classic Italian Margherita Pizza",
     description: "Authentic Neapolitan style pizza topped with sweet San Marzano tomato sauce, fresh mozzarella fior di latte, and basil.",
-    image: "https://images.unsplash.com/photo-1601924638867-3ec62b6741dc?w=800&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&h=600&fit=crop",
     category: "dinner",
     cuisine: "italian",
     prepTime: 20,
@@ -396,7 +396,7 @@ const sampleRecipes = [
   {
     title: "Fragrant Vegetable Biryani",
     description: "Aromatic basmati rice layered with spiced mixed vegetables, saffron milk, mint, and crispy caramelized onions.",
-    image: "https://images.unsplash.com/photo-1563379091339-03246963d96a?w=800&h=600&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1695029502961-f57f307bd0c0?q=80&w=687&auto=format&fit=crop",
     category: "dinner",
     cuisine: "indian",
     prepTime: 25,

@@ -1,10 +1,35 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import {
+  Search,
+  SlidersHorizontal,
+  RotateCcw,
+  Heart,
+  Clock,
+  User,
+  Star,
+  X,
+  UtensilsCrossed,
+  Sparkles,
+  ChevronRight,
+  Gauge,
+  Tag,
+  Globe
+} from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { API_BASE_URL, DEFAULT_RECIPE_IMAGE, getRecipeImageUrl } from '../config/api'
 import './BrowseRecipes.css'
+
+const CATEGORY_OPTIONS = [
+  { id: '', label: 'All Recipes' },
+  { id: 'breakfast', label: 'Breakfast' },
+  { id: 'lunch', label: 'Lunch' },
+  { id: 'dinner', label: 'Dinner' },
+  { id: 'dessert', label: 'Dessert' },
+  { id: 'snack', label: 'Snacks' }
+]
 
 const BrowseRecipes = () => {
   const [recipes, setRecipes] = useState([])
@@ -108,8 +133,6 @@ const BrowseRecipes = () => {
         params.search = filters.search.trim()
       }
 
-      console.log('Fetching recipes with params:', params)
-
       const response = await axios.get(
         `${API_BASE_URL}/api/recipes`,
         {
@@ -121,16 +144,11 @@ const BrowseRecipes = () => {
         }
       )
 
-      console.log('Recipes API response:', response.data)
-
-      // Handle the expected API structure
       if (response.data && Array.isArray(response.data.recipes)) {
         setRecipes(response.data.recipes)
       } else if (Array.isArray(response.data)) {
-        // Fallback if API directly returns an array
         setRecipes(response.data)
       } else {
-        console.error('Unexpected API response:', response.data)
         setRecipes([])
       }
     } catch (error) {
@@ -138,7 +156,6 @@ const BrowseRecipes = () => {
         'Error fetching recipes:',
         error.response?.data || error.message
       )
-
       setRecipes([])
     } finally {
       setLoading(false)
@@ -207,7 +224,6 @@ const BrowseRecipes = () => {
           if (prev.includes(String(recipeId))) {
             return prev
           }
-
           return [...prev, String(recipeId)]
         })
       } else {
@@ -228,78 +244,109 @@ const BrowseRecipes = () => {
   }
 
   const getDifficultyClass = (difficulty) => {
-    if (!difficulty) return ''
-
+    if (!difficulty) return 'medium'
     return difficulty.toLowerCase()
   }
+
+  const hasActiveFilters =
+    filters.category || filters.cuisine || filters.difficulty || filters.search
 
   return (
     <div className="browse-recipes">
       <Header />
 
-      <div className="browse-content">
+      <main className="browse-content">
         <div className="container">
 
-          {/* Page Header */}
-          <div className="page-header">
-            <h1>Browse Recipes 🍽️</h1>
+          {/* Page Banner */}
+          <header className="page-header">
+            <div className="header-badge">
+              <Sparkles size={14} className="sparkle-icon" />
+              <span>Explore Collection</span>
+            </div>
+            <h1>Explore Recipes</h1>
             <p>
-              Explore delicious culinary creations shared by our community
+              Discover authentic home-cooked meals, trending dishes, and quick weeknight favorites.
             </p>
-          </div>
+
+            {/* Quick Category Chips */}
+            <div className="quick-category-pills">
+              {CATEGORY_OPTIONS.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`pill-btn ${filters.category === cat.id ? 'active' : ''}`}
+                  onClick={() => handleFilterChange('category', cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </header>
 
           <div className="browse-layout">
 
             {/* ================= FILTER SIDEBAR ================= */}
-            <div className="filters-sidebar">
+            <aside className="filters-sidebar">
 
               <div className="filter-sidebar-header">
                 <h3>
-                  <span className="filter-icon">🎛️</span>
+                  <SlidersHorizontal size={18} className="sidebar-icon" />
                   Filter Recipes
                 </h3>
 
-                {(
-                  filters.category ||
-                  filters.cuisine ||
-                  filters.difficulty ||
-                  filters.search
-                ) && (
+                {hasActiveFilters && (
                   <button
                     className="clear-btn"
                     onClick={clearFilters}
+                    title="Reset all filters"
                   >
-                    ↺ Reset All
+                    <RotateCcw size={12} />
+                    Reset
                   </button>
                 )}
               </div>
 
-              {/* Search */}
+              {/* Search Field */}
               <div className="filter-group">
-                <label>
-                  <span className="label-icon">🔍</span>
-                  Search Keywords
+                <label htmlFor="search-input">
+                  <Search size={14} className="label-icon" />
+                  Search
                 </label>
-
-                <input
-                  type="text"
-                  placeholder="Title or ingredient..."
-                  value={filters.search}
-                  onChange={(e) =>
-                    handleFilterChange('search', e.target.value)
-                  }
-                  className="filter-input"
-                />
+                <div className="search-input-wrapper">
+                  <Search size={16} className="search-field-icon" />
+                  <input
+                    id="search-input"
+                    type="text"
+                    placeholder="Search by recipe or ingredient..."
+                    value={filters.search}
+                    onChange={(e) =>
+                      handleFilterChange('search', e.target.value)
+                    }
+                    className="filter-input"
+                  />
+                  {filters.search && (
+                    <button
+                      type="button"
+                      className="search-clear-btn"
+                      onClick={() => handleFilterChange('search', '')}
+                      aria-label="Clear search"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* Category */}
+              {/* Category Dropdown */}
               <div className="filter-group">
-                <label>
-                  <span className="label-icon">🏷️</span>
+                <label htmlFor="category-select">
+                  <Tag size={14} className="label-icon" />
                   Category
                 </label>
 
                 <select
+                  id="category-select"
                   value={filters.category}
                   onChange={(e) =>
                     handleFilterChange('category', e.target.value)
@@ -310,18 +357,19 @@ const BrowseRecipes = () => {
                   <option value="lunch">Lunch</option>
                   <option value="dinner">Dinner</option>
                   <option value="dessert">Dessert</option>
-                  <option value="snack">Snack</option>
+                  <option value="snack">Snacks</option>
                 </select>
               </div>
 
-              {/* Cuisine */}
+              {/* Cuisine Dropdown */}
               <div className="filter-group">
-                <label>
-                  <span className="label-icon">🌐</span>
+                <label htmlFor="cuisine-select">
+                  <Globe size={14} className="label-icon" />
                   Cuisine
                 </label>
 
                 <select
+                  id="cuisine-select"
                   value={filters.cuisine}
                   onChange={(e) =>
                     handleFilterChange('cuisine', e.target.value)
@@ -337,14 +385,15 @@ const BrowseRecipes = () => {
                 </select>
               </div>
 
-              {/* Difficulty */}
+              {/* Difficulty Dropdown */}
               <div className="filter-group">
-                <label>
-                  <span className="label-icon">⚡</span>
+                <label htmlFor="difficulty-select">
+                  <Gauge size={14} className="label-icon" />
                   Difficulty
                 </label>
 
                 <select
+                  id="difficulty-select"
                   value={filters.difficulty}
                   onChange={(e) =>
                     handleFilterChange('difficulty', e.target.value)
@@ -357,42 +406,81 @@ const BrowseRecipes = () => {
                 </select>
               </div>
 
-            </div>
+            </aside>
 
-            {/* ================= RECIPES CONTENT ================= */}
-            <div className="recipes-content">
+            {/* ================= RECIPES MAIN GRID ================= */}
+            <section className="recipes-content">
+
+              {/* Active Filter Chips Bar */}
+              {hasActiveFilters && (
+                <div className="active-filter-chips">
+                  <span className="active-filter-label">Active Filters:</span>
+                  {filters.search && (
+                    <span className="chip">
+                      "{filters.search}"
+                      <X size={12} onClick={() => handleFilterChange('search', '')} />
+                    </span>
+                  )}
+                  {filters.category && (
+                    <span className="chip">
+                      {filters.category}
+                      <X size={12} onClick={() => handleFilterChange('category', '')} />
+                    </span>
+                  )}
+                  {filters.cuisine && (
+                    <span className="chip">
+                      {filters.cuisine}
+                      <X size={12} onClick={() => handleFilterChange('cuisine', '')} />
+                    </span>
+                  )}
+                  {filters.difficulty && (
+                    <span className="chip">
+                      {filters.difficulty}
+                      <X size={12} onClick={() => handleFilterChange('difficulty', '')} />
+                    </span>
+                  )}
+                  <button className="clear-chips-link" onClick={clearFilters}>
+                    Clear all
+                  </button>
+                </div>
+              )}
 
               {loading ? (
 
-                <div className="loading">
-                  🍳 Fetching delicious recipes...
+                <div className="loading-state">
+                  <div className="spinner"></div>
+                  <p>Loading delicious recipes...</p>
                 </div>
 
               ) : recipes.length === 0 ? (
 
                 <div className="empty-state">
-                  <div className="empty-icon">🔎</div>
+                  <div className="empty-icon-wrap">
+                    <UtensilsCrossed size={36} />
+                  </div>
 
-                  <h3>No recipes found</h3>
+                  <h3>No recipes match your criteria</h3>
 
                   <p>
-                    Try adjusting your search criteria or resetting filters.
+                    Try broadening your search or resetting your filters to explore more recipes.
                   </p>
 
                   <button
-                    className="btn btn-outline"
+                    className="btn-reset-filters"
                     onClick={clearFilters}
                   >
-                    Clear Filters
+                    Reset Filters
                   </button>
                 </div>
 
               ) : (
 
                 <>
-                  {/* Recipe count */}
-                  <div className="recipe-count">
-                    Showing <strong>{recipes.length}</strong> recipes
+                  {/* Results Header Count */}
+                  <div className="results-meta-bar">
+                    <span className="recipe-count">
+                      Showing <strong>{recipes.length}</strong> {recipes.length === 1 ? 'recipe' : 'recipes'}
+                    </span>
                   </div>
 
                   <div className="recipe-grid">
@@ -400,24 +488,20 @@ const BrowseRecipes = () => {
                     {recipes.map((recipe) => {
 
                       const recipeId = String(recipe._id)
-
                       const isSaved = savedRecipeIds.includes(recipeId)
-
                       const totalTime =
                         Number(recipe.prepTime || 0) +
                         Number(recipe.cookTime || 0)
 
                       return (
-                        <div
+                        <article
                           key={recipeId}
-                          className="recipe-card clickable"
-                          onClick={() =>
-                            navigate(`/recipe/${recipeId}`)
-                          }
+                          className="recipe-card"
+                          onClick={() => navigate(`/recipe/${recipeId}`)}
                         >
 
-                          {/* Recipe Image */}
-                          <div className="recipe-image">
+                          {/* Recipe Image Wrap */}
+                          <div className="recipe-image-wrap">
 
                             <img
                               src={getRecipeImage(recipe.image)}
@@ -425,89 +509,85 @@ const BrowseRecipes = () => {
                               loading="lazy"
                               onError={(e) => {
                                 e.currentTarget.onerror = null
-                                e.currentTarget.src = DEFAULT_IMAGE
+                                e.currentTarget.src = DEFAULT_RECIPE_IMAGE
                               }}
                             />
 
-                            {/* Bookmark */}
-                            <button
-                              type="button"
-                              className={`bookmark-btn ${
-                                isSaved ? 'saved' : ''
-                              }`}
-                              onClick={(e) =>
-                                handleToggleSave(e, recipeId)
-                              }
-                              title={
-                                isSaved
-                                  ? 'Remove bookmark'
-                                  : 'Save recipe'
-                              }
-                              aria-label={
-                                isSaved
-                                  ? 'Remove bookmark'
-                                  : 'Save recipe'
-                              }
-                            >
-                              {isSaved ? '❤️' : '🤍'}
-                            </button>
-
-                            {/* Category */}
+                            {/* Category Tag */}
                             <span className="recipe-category-tag">
                               {recipe.category || 'Recipe'}
                             </span>
 
+                            {/* Favorite Button */}
+                            <button
+                              type="button"
+                              className={`bookmark-btn ${isSaved ? 'saved' : ''}`}
+                              onClick={(e) => handleToggleSave(e, recipeId)}
+                              title={isSaved ? 'Remove bookmark' : 'Save recipe'}
+                              aria-label={isSaved ? 'Remove bookmark' : 'Save recipe'}
+                            >
+                              <Heart
+                                size={18}
+                                className={isSaved ? 'heart-icon saved' : 'heart-icon'}
+                                fill={isSaved ? '#e53e3e' : 'none'}
+                              />
+                            </button>
+
                           </div>
 
-                          {/* Recipe Content */}
-                          <div className="recipe-content">
+                          {/* Recipe Content Body */}
+                          <div className="recipe-card-body">
 
-                            <h3>
+                            <h3 className="recipe-card-title">
                               {recipe.title || 'Untitled Recipe'}
                             </h3>
 
-                            <div className="recipe-meta">
+                            <div className="recipe-author">
+                              <User size={13} className="author-icon" />
+                              <span>{recipe.authorName || 'Chef'}</span>
+                            </div>
 
-                              <span>
-                                👩‍🍳 {recipe.authorName || 'Chef'}
-                              </span>
-
-                              <span>
-                                ⏱️ {totalTime} min
-                              </span>
+                            {/* Meta Badges */}
+                            <div className="recipe-meta-row">
+                              {totalTime > 0 && (
+                                <span className="meta-item time">
+                                  <Clock size={13} />
+                                  <span>{totalTime} mins</span>
+                                </span>
+                              )}
 
                               <span
-                                className={`difficulty ${getDifficultyClass(
+                                className={`difficulty-badge ${getDifficultyClass(
                                   recipe.difficulty
                                 )}`}
                               >
-                                💪 {recipe.difficulty || 'Medium'}
+                                {recipe.difficulty || 'Medium'}
                               </span>
-
                             </div>
 
-                            <div className="rating-row">
-
-                              <div className="rating">
-                                ⭐{' '}
-                                {typeof recipe.rating === 'number'
-                                  ? recipe.rating.toFixed(1)
-                                  : '5.0'}
-
+                            {/* Card Footer */}
+                            <div className="recipe-card-footer">
+                              <div className="rating-block">
+                                <Star size={14} className="star-icon" fill="#f59e0b" />
+                                <span className="rating-val">
+                                  {typeof recipe.rating === 'number'
+                                    ? recipe.rating.toFixed(1)
+                                    : '5.0'}
+                                </span>
                                 <span className="reviews-count">
                                   ({recipe.numReviews || 1})
                                 </span>
                               </div>
 
                               <span className="view-link">
-                                View Recipe →
+                                View
+                                <ChevronRight size={14} className="arrow-icon" />
                               </span>
-
                             </div>
 
                           </div>
 
-                        </div>
+                        </article>
                       )
                     })}
 
@@ -515,12 +595,12 @@ const BrowseRecipes = () => {
                 </>
               )}
 
-            </div>
+            </section>
 
           </div>
 
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
